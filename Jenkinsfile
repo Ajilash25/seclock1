@@ -35,23 +35,25 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                // Dynamically locates the scanner configured in Manage Jenkins -> Tools
-                def scannerHome = tool 'sonar-scanner'
+                script {
+                    // Wrapped in script block to allow tool definition in declarative pipeline
+                    def scannerHome = tool 'sonar-scanner'
 
-                withSonarQubeEnv('sonarqube') {
-                    withCredentials([
-                        string(
-                            credentialsId: 'sonarqube-token',
-                            variable: 'SONAR_TOKEN'
-                        )
-                    ]) {
-                        sh """
-                            ${scannerHome}/bin/sonar-scanner \
-                              -Dsonar.projectKey=seclock \
-                              -Dsonar.sources=. \
-                              -Dsonar.python.version=3.12 \
-                              -Dsonar.token=\$SONAR_TOKEN
-                        """
+                    withSonarQubeEnv('sonarqube') {
+                        withCredentials([
+                            string(
+                                credentialsId: 'sonarqube-token',
+                                variable: 'SONAR_TOKEN'
+                            )
+                        ]) {
+                            sh """
+                                ${scannerHome}/bin/sonar-scanner \
+                                  -Dsonar.projectKey=seclock \
+                                  -Dsonar.sources=. \
+                                  -Dsonar.python.version=3.12 \
+                                  -Dsonar.token=\$SONAR_TOKEN
+                            """
+                        }
                     }
                 }
             }
