@@ -56,6 +56,7 @@ pipeline {
                 }
             }
         }
+    }
         stage('Run Tests') {
             steps {
                 sh '''
