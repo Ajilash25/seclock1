@@ -35,6 +35,9 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
+                // This fetches the path of the scanner configured in Manage Jenkins -> Tools
+                def scannerHome = tool 'sonar-scanner'
+                
                 withSonarQubeEnv('sonarqube') {
                     withCredentials([
                         string(
@@ -42,18 +45,17 @@ pipeline {
                             variable: 'SONAR_TOKEN'
                         )
                     ]) {
-                        sh '''
-                            sonar-scanner \
+                        sh """
+                            ${scannerHome}/bin/sonar-scanner \
                               -Dsonar.projectKey=seclock \
                               -Dsonar.sources=. \
                               -Dsonar.python.version=3.12 \
-                              -Dsonar.token=$SONAR_TOKEN
-                        '''
+                              -Dsonar.token=\$SONAR_TOKEN
+                        """
                     }
                 }
             }
         }
-
         stage('Run Tests') {
             steps {
                 sh '''
