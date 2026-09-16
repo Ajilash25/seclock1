@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: seclock
+  namespace: argocd
+
 spec:
   replicas: 1
 
@@ -15,6 +17,9 @@ spec:
         app: seclock
 
     spec:
+      imagePullSecrets:
+        - name: ecr-secret
+
       containers:
         - name: seclock
           image: 126078152349.dkr.ecr.ap-south-1.amazonaws.com/seclock:latest
