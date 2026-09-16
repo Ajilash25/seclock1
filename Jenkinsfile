@@ -35,9 +35,9 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                // This fetches the path of the scanner configured in Manage Jenkins -> Tools
+                // Dynamically locates the scanner configured in Manage Jenkins -> Tools
                 def scannerHome = tool 'sonar-scanner'
-                
+
                 withSonarQubeEnv('sonarqube') {
                     withCredentials([
                         string(
@@ -56,7 +56,7 @@ pipeline {
                 }
             }
         }
-    }
+
         stage('Run Tests') {
             steps {
                 sh '''
